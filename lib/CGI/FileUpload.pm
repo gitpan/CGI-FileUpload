@@ -9,11 +9,9 @@ CGI::FileUpload - A module to upload file through CGI asynchrnously, know where 
 
 =head1 VERSION
 
-Version 0.01
-
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 DESCRIPTION
 
@@ -70,6 +68,10 @@ Either retrieves the id cookie or build one based one random number + ip
 =head3 my $fupload=new CGI::FileUpload();
 
 Creates a new instance in the temp directory
+
+=head3 my $fupload=new CGI::FileUpload(suffix=>string);
+
+Creates a file (thus returns a key)ending with .string
 
 =head3 my $fupload=new CGI::FileUpload(key=>string);
 
@@ -194,15 +196,26 @@ my @props: Field(Accessor => '_props', Permission => 'private', Type=>'Util::Pro
 
 my %init_args :InitArgs = (
 			   KEY=>qr/^key$/i,
+			   SUFFIX=>qr/^suffix$/i,
 			  );
 sub _init :Init{
   my ($self, $h) = @_;
 
   if ($h->{KEY}){    #just a set of properties
     $self->key($h->{KEY});
+
+    unless (-f $self->file(".properties")){
+      open (FD, ">".$self->file(".properties")) or die "cannot create prop file [".$self->file(".properties")."]:$!";
+      close FD;
+    }
     $self->_props(Util::Properties->new(file=>$self->file(".properties")));
   }else{
-    my ($fh, $file)=tempfile(DIR=>uploadDirectory(), UNLINK=>0);
+    my ($fh, $file);
+    if($h->{SUFFIX}){
+      ($fh, $file)=tempfile(DIR=>uploadDirectory(), SUFFIX=>".$h->{SUFFIX}", UNLINK=>0);
+    }else{
+      ($fh, $file)=tempfile(DIR=>uploadDirectory(), UNLINK=>0);
+    }
     my $key=basename($file);
     $self->key($key);
     my $fprop=$self->file(".properties");
@@ -245,13 +258,32 @@ sub formString{
   $params{form_name}||='cgi_fileupload';
 
   # TODO add support for oncompletion callback
-
   return <<EOT;
+  <script language='javascript'>
+    function activateKeySuff(me, other){
+      other.disabled=(me.value != '');
+    }
+  </script>
   <form name='$params{form_name}' method='post' enctype='multipart/form-data'>
-      <input type='file' name='uploadfile'/>
-      <input type='hidden' name='action' value='upload'/>
-      <input type='submit' value='$params{submit_value}'>
+    <table border='0'>
+      <tr>
+        <td>
+          <input type='file' name='uploadfile'/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          suffix=<input type='text' name='suffix' size='5' onchange='activateKeySuff(this, this.form.key)'/> or key=<input type='text' name='key' ' onchange='activateKeySuff(this, this.form.suffix)'/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type='submit' value='$params{submit_value}'>
+        </td>
+      </tr>
       <input type='hidden' name='return_format' value='$params{return_format}'/>
+      <input type='hidden' name='action' value='upload'/>
+    </table>
   </form>
 EOT
 }

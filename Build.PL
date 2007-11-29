@@ -5,14 +5,14 @@ my %requires=(
 	      'perl' => '5.6.1',
 	      'Object::InsideOut' => 0,
 	      'CGI'=>0,
-	      'CGI::Carp'=>0,
 	      'File::Temp'=>0,
 	      'File::Spec'=>0,
 	      'Util::Properties'=>'0.14',
-	      'File::Glob'=>0,
-	      'File::Basename'=>0,
 	     );
 my %recommends=(
+		'File::Glob'=>0,
+		'File::Basename'=>0,
+		'CGI::Carp'=>0,
 	       );
 
 my @scripts;

@@ -50,7 +50,7 @@ EOT
   print $query->end_html;
 }else{
   if($action eq 'upload'){
-    my $fu=new CGI::FileUpload();
+    my $fu=new CGI::FileUpload(key=>$query->param('key'), suffix=>$query->param('suffix'));
     $fu->upload(query=>$query);
   }else{
     die "unknonw action [$action]";

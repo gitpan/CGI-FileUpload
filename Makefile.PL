@@ -8,14 +8,11 @@ WriteMakefile
           'EXE_FILES' => [],
           'VERSION_FROM' => 'lib/CGI/FileUpload.pm',
           'PREREQ_PM' => {
-                           'File::Glob' => 0,
-                           'File::Spec' => 0,
-                           'CGI' => 0,
                            'Test::More' => 0,
                            'File::Temp' => 0,
+                           'File::Spec' => 0,
                            'Util::Properties' => '0.14',
-                           'File::Basename' => 0,
-                           'CGI::Carp' => 0,
+                           'CGI' => 0,
                            'Object::InsideOut' => 0
                          }
         )
