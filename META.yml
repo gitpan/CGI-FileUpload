@@ -1,6 +1,6 @@
 ---
 name: CGI-FileUpload
-version: 0.02
+version: 0.03
 author:
   - 'Alexandre Masselot <alexandre.masselot@genebio.com>'
 abstract: 'A module to upload file through CGI asynchrnously, know where the upload status and get back the file from a third parties on the server'
@@ -23,7 +23,7 @@ recommends:
 provides:
   CGI::FileUpload:
     file: lib/CGI/FileUpload.pm
-    version: 0.02
+    version: 0.03
   CGI::FileUpload::Manager:
     file: lib/CGI/FileUpload/Manager.pm
 generated_by: Module::Build version 0.2808

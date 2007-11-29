@@ -11,7 +11,7 @@ CGI::FileUpload - A module to upload file through CGI asynchrnously, know where 
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 =head1 DESCRIPTION
 
